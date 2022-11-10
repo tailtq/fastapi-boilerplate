@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from playhouse.shortcuts import model_to_dict
 
 from book.requests import CreateBookRequest, UpdateBookRequest
 from book.services import BookService
@@ -11,22 +12,20 @@ router = APIRouter(
 
 
 @router.get("/")
-async def get_list(service: BookService = Depends(BookService)):
-    print(service.a)
-    return []
+async def get_list(service: BookService = Depends(use_cache=True)):
+    return [model_to_dict(item) for item in service.list()]
 
 
 @router.get("/{book_id}")
-async def read(book_id: int, service: BookService = Depends(BookService)):
-    print(service.a)
-    return book_id
+async def read(book_id: int, service: BookService = Depends(use_cache=True)):
+    book = service.get_by_id(book_id)
+    return model_to_dict(book)
 
 
 @router.post("/")
-async def create(data: CreateBookRequest):
-    print(data)
-    book = None
-    return book
+async def create(data: CreateBookRequest, service: BookService = Depends(use_cache=True)):
+    book = service.create(data.dict())
+    return model_to_dict(book)
 
 
 @router.put("/{book_id}")
