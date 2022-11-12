@@ -6,6 +6,8 @@ from pydantic import BaseModel, validator
 
 class CreateBookRequest(BaseModel):
     title: str
+    description: str
+    cover: str
     author: str
     published_at: date
 
