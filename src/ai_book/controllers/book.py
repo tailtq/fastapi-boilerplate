@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from playhouse.shortcuts import model_to_dict
 
-from book.requests import CreateBookRequest, UpdateBookRequest
-from book.services import BookService
+from ai_book.requests import CreateBookRequest, UpdateBookRequest
+from ai_book.services import BookService
 
 router = APIRouter(
     prefix="/books",

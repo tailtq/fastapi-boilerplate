@@ -1,6 +1,7 @@
+import datetime as dt
 from typing import Type
 
-from peewee import MySQLDatabase, PostgresqlDatabase, Database, Model
+from peewee import MySQLDatabase, PostgresqlDatabase, Database, Model, DateTimeField, SQL
 
 from ..config import DATABASE
 
@@ -27,5 +28,8 @@ db = _db_engine_class(_db_name, host=_db_host, port=_db_port, user=_db_username,
 
 
 class BaseModel(Model):
+    created_at = DateTimeField(default=dt.datetime.now)
+    updated_at = DateTimeField(default=dt.datetime.now)
+
     class Meta:
         database = db

@@ -1,2 +1,4 @@
 cd src/
-uvicorn server:app --reload
+
+python server.py
+#uvicorn server:app --reload

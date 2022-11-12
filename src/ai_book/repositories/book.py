@@ -1,6 +1,6 @@
 from typing import Type
 
-from book.models.book import Book
+from ai_book.models.book import Book
 from core.repositories.base import BaseRepository
 
 

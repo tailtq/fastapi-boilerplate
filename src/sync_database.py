@@ -3,9 +3,10 @@ from pathlib import Path
 import dotenv
 from peewee_migrate import Router
 
-dotenv.load_dotenv("../.env")
+dotenv.load_dotenv(Path(__file__).parent.parent / ".env")
 
-from book.models.book import Book
+from ai_book.models.book import Book
+from ai_media.model import Media
 from core.databases.sql_connect import db
 
 migration_dir = Path.cwd() / "src/core/databases/migrations"
@@ -13,6 +14,6 @@ router = Router(db, migration_dir)
 
 if __name__ == "__main__":
     # Create migration (Add new model here)
-    router.create(auto=[Book])
+    router.create(auto=[Book, Media])
     # Run migration/migrations
     router.run()
