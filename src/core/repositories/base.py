@@ -1,6 +1,5 @@
 from typing import Optional, List, Any, Type, Union
 
-from ai_book.models.book import Book
 from core.databases.sql_connect import BaseModel
 
 
