@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional
 
 from core.databases.sql_connect import BaseModel
 from core.repositories.base import BaseRepository
@@ -15,7 +15,7 @@ class BaseService:
     def first(self, **kwargs) -> Optional[BaseModel]:
         return self._repository.first(**kwargs)
 
-    def get_by_id(self, _id: Optional[Union[str, int]]) -> Optional[BaseModel]:
+    def get_by_id(self, _id: Optional[str | int]) -> Optional[BaseModel]:
         return self._repository.first({"id": _id})
 
     def create(self, data: dict) -> Optional[BaseModel]:
@@ -27,7 +27,7 @@ class BaseService:
     def save(self, instance: BaseModel, data: dict) -> BaseModel:
         return self._repository.save(instance, data)
 
-    def delete_by_id(self, _id: Union[str, int]) -> int:
+    def delete_by_id(self, _id: str | int) -> int:
         self._delete_relationships(_id)
         return self._repository.delete(pk=_id)
 
@@ -35,5 +35,5 @@ class BaseService:
         return self._repository.delete(**kwargs)
 
     @abstractmethod
-    def _delete_relationships(self, _id: Union[str, int]):
+    def _delete_relationships(self, _id: str | int):
         raise NotImplementedError()

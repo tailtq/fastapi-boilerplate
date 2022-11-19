@@ -1,4 +1,4 @@
-from typing import Optional, List, Any, Type, Union
+from typing import Optional, List, Any, Type
 
 from core.databases.sql_connect import BaseModel
 
@@ -17,7 +17,7 @@ class BaseRepository:
         conditions = (getattr(self._model, key) == value for key, value in conditions.items())
         return self._model.select().where(*conditions).first()
 
-    def create(self, data: Union[dict, List[dict]]) -> Optional[BaseModel]:
+    def create(self, data: dict | List[dict]) -> Optional[BaseModel]:
         if type(data) == list:
             return self._model.insert_many(data).execute()
         return self._model.create(**data)

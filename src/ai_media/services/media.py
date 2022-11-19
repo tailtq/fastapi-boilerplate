@@ -1,6 +1,4 @@
 import datetime
-from typing import Union
-import sys
 
 from fastapi import UploadFile, Depends
 from slugify import slugify
@@ -33,7 +31,7 @@ class MediaService(BaseService):
             "link": link,
         })
 
-    def _delete_relationships(self, _id: Union[str, int]):
+    def _delete_relationships(self, _id: str | int):
         pass
 
     def _get_current_datetime(self) -> str:

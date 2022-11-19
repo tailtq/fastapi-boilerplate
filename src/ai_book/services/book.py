@@ -1,5 +1,3 @@
-from typing import Union
-
 from fastapi import Depends
 
 from ai_book.repositories.book import BookRepository
@@ -10,5 +8,5 @@ class BookService(BaseService):
     def __init__(self, repository: BookRepository = Depends(BookRepository)):
         super().__init__(repository)
 
-    def _delete_relationships(self, _id: Union[str, int]):
+    def _delete_relationships(self, _id: str | int):
         pass
