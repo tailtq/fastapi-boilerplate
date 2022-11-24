@@ -5,5 +5,5 @@ from core.repositories.base import BaseRepository
 
 
 class BookRepository(BaseRepository):
-    def __init__(self, model: Type[Book] = Book):
-        super().__init__(model)
+    def __init__(self):
+        super().__init__(Book)
