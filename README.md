@@ -2,6 +2,8 @@
 
 A boilerplate for quickly coding and deploying Python API servers using FastAPI, SQL Databases, and Peewee.
 
+With a single command, you can install and setup a production-ready FastAPI app on your system. Many features are included into the app, such as JWT authentication, request validation, unit and integration tests, continuous integration, docker support, API documentation, and so on. Check out the features list below for more information.
+
 
 ## Installation
 
@@ -106,15 +108,24 @@ AWS_S3_BUCKET=
 ```shell
 src\
   |--{module_name}
-     |--const.py        # Constants (controller layer)
-     |--controllers\    # Route controllers (controller layer)
-     |--middlewares\    # Custom express middlewares
-     |--models\         # Mongoose models (data layer)
-     |--services\       # Business logic (service layer)
-     |--utils\          # Utility classes and functions
-     |--requests\       # Request data validation schemas
- |--server.py           # FastAPI app
- |--sync_database.py    # Sync database (generate migration files & run)
+    |--const.py               # Constants (controller layer)
+    |--controllers\           # Route controllers (controller layer)
+    |--middlewares\           # Custom FastAPI middlewares
+    |--models\                # Peewee models (data layer)
+    |--services\              # Business logic (service layer)
+    |--repositories\          # Data logic
+    |--utils\                 # Utility classes and functions
+    |--requests\              # Request data validation schemas
+  |--core
+    |--databases\
+      |--migrations\          # Migration files
+      |--sql_connect.py       # SQL database connection & base model
+    |--repositories\base.py   # Base class for data logic
+    |--services\base.py       # Base class for business logic
+    |--utils\                 # Utility classes and functions
+    |--config.py               # Project configurations
+  |--server.py                # FastAPI app
+  |--sync_database.py         # Sync database (generate migration files & run)
 ```
 
 **Note**: For simple modules, we can create the files representing their responsibility directly instead of creating directories (please check the `ai_media` as the reference).
