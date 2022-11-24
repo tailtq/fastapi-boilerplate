@@ -3,3 +3,4 @@
 
 .env
 src/resources/media
+src/temp/

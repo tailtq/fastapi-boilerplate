@@ -5,8 +5,8 @@ from core.repositories.base import BaseRepository
 
 
 class UserRepository(BaseRepository):
-    def __init__(self, model: Type[User] = User):
-        super().__init__(model)
+    def __init__(self):
+        super().__init__(User)
 
     @staticmethod
     def get_info_for_jwt_token(user: User) -> dict:
