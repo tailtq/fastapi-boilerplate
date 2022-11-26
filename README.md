@@ -1,4 +1,4 @@
-# RESTful API Python FastAPI Boilerplate
+# RESTful API FastAPI Boilerplate
 
 A boilerplate for quickly coding and deploying Python API servers using FastAPI, SQL Databases, and Peewee.
 
@@ -7,7 +7,7 @@ With a single command, you can install and setup a production-ready FastAPI app 
 
 ## Installation
 
-1. For manually installation, first clone the repository:
+1. Clone the repository:
 ```shell
 git clone https://github.com/tailtq/fastapi-boilerplate.git
 ```
@@ -45,9 +45,12 @@ python src/sync_database.py
 - [Error Handling](#error-handling)
 - [Validation](#validation)
 - [Authentication](#authentication)
-- [Authorization](#authorization)
-- [Logging](#logging)
-- [Linting](#linting)
+
+[//]: # (- [Authorization]&#40;#authorization&#41;)
+
+[//]: # (- [Logging]&#40;#logging&#41;)
+
+[//]: # (- [Linting]&#40;#linting&#41;)
 
 
 ## Features
@@ -100,6 +103,11 @@ LOCAL_STORAGE_PATH=resources/media
 AWS_PUBLIC_KEY=
 AWS_SECRET_KEY=
 AWS_S3_BUCKET=
+
+# specify JWT configuration
+JWT_SECRET=
+JWT_ALGORITHM=
+JWT_AUTH_DURATION=86400
 ```
 
 
@@ -152,8 +160,83 @@ List of available routes:
 
 
 ## Error Handling
+
+We have the centralized error handlers inside the `server.py` file, which are the functionality provided by FastAPI. For example, the code below catches validation errors thrown by FastAPI by default. We can customize the logic to return the data in our own favor.
+
+```python
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, e: RequestValidationError):
+    # specify our logic here
+    return CustomORJSONResponse(e.errors(), status.HTTP_400_BAD_REQUEST)
+```
+
+The error handler sends an error response, which has the following format:
+```json
+{
+    "ok": false,
+    "data": {},
+    "error": [
+        {
+            "loc": [
+                "body",
+                "file"
+            ],
+            "msg": "field required",
+            "type": "value_error.missing"
+        }
+    ]
+}
+```
+
+We can also define our errors, then freely throw and catch them in the cases we need.
+
+
 ## Validation
+
+Request data is validated using [Pydantic](https://pydantic-docs.helpmanual.io/). Please check the documentation for more details on how to write Pydantic validation schemas. It is similar to defining a model.
+
+```python
+from pydantic import BaseModel
+
+
+class UserRegisterRequest(BaseModel):
+    username: str
+    password: str
+    name: str
+```
+
+The validation schemas are defined in the `src/{module_name}/requests` directory and are used in the controllers by providing them as parameters to these functions.
+
+```python
+@router.post("/register")
+def register(data: UserRegisterRequest):
+    # specify our logic
+    return None
+```
+
+
 ## Authentication
-## Authorization
-## Logging
-## Linting
+
+The authentication logic is in the `ai_auth` module, this module is automatically registered inside the `server.py`. To disable the authentication functions, you can comment the line below inside the `server.py`.
+
+```python
+app.include_router(auth.router, prefix="/v1")
+```
+
+To parse and extract data in users' tokens, you can use `get_current_user_info` function in `middlewares/parse_bearer_token.py`. That function necessitates the inclusion of a valid JWT access token in the Authorization request header via the Bearer schema. An Unauthorized (401) error is thrown if the request does not contain a valid access token.
+
+**Generating Access Tokens:**
+
+A successful call to the register (`POST /v1/auth/register`) or login (`POST /v1/auth/login`) endpoints will generate an access token. These endpoints' responses also include refresh tokens.
+
+An access token is valid for 30 minutes. You can modify this expiration time by changing the `JWT_AUTH_DURATION` environment variable in the .env file.
+
+**Refreshing Access Tokens:**
+
+After the access token expires, a new access token can be generated, by making a call to the refresh token endpoint (POST `/v1/auth/refresh-tokens`) and sending along a valid refresh token in the request body. This call returns a new access token and a new refresh token.
+
+[//]: # (## Authorization)
+
+[//]: # (## Logging)
+
+[//]: # (## Linting)
