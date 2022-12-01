@@ -32,3 +32,10 @@ def get_profile(user_info: dict = Depends(get_current_user_info), auth_service: 
     auth_service.user_type = "user"
     result = auth_service.get_profile(user_info["id"])
     return model_to_dict(result)
+
+
+@router.post("/refresh-token")
+def get_profile(user_info: dict = Depends(get_current_user_info), auth_service: AuthService = Depends()):
+    auth_service.user_type = "user"
+    result = auth_service.refresh_token(user_info["id"])
+    return result

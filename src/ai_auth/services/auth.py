@@ -32,6 +32,11 @@ class AuthService:
             return self._user_repository
 
     def login(self, username: str, password: str) -> dict:
+        """
+        :param username:
+        :param password:
+        :return:
+        """
         user = self._repository.first({"email": username})
         if not user:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="invalid_user")
@@ -47,6 +52,10 @@ class AuthService:
         }
 
     def register(self, data: UserRegisterRequest) -> User:
+        """
+        :param data:
+        :return:
+        """
         user = self._repository.first({"email": data.username})
         if user:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="used_email")
@@ -60,7 +69,36 @@ class AuthService:
         return info
 
     def get_profile(self, _id: int) -> User:
+        """
+        :param _id:
+        :return:
+        """
         user = self._repository.get_profile(_id)
+
         if not user:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="invalid_user")
+
         return user
+
+    def refresh_token(self, _id: int) -> dict:
+        """
+        :param _id:
+        :return:
+        """
+        user = self.get_profile(_id)
+        return self._generate_token(user)
+
+    def _generate_token(self, user: User) -> dict:
+        """
+        :param user:
+        :return:
+        """
+        info = self._repository.get_info_for_jwt_token(user)
+
+        return {
+            **info,
+            "token": jwt.encode({
+                **info,
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(seconds=JWT_AUTH_DURATION)
+            }, JWT_SECRET)
+        }

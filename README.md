@@ -150,6 +150,7 @@ List of available routes:
 **Auth routes:**
 - `POST /v1/auth/register` - register
 - `POST /v1/auth/login` - login
+- `POST /v1/auth/refresh-token` - refresh token
 
 **Book routes:**
 - `POST /v1/books` - create a user
@@ -233,7 +234,7 @@ An access token is valid for 30 minutes. You can modify this expiration time by 
 
 **Refreshing Access Tokens:**
 
-After the access token expires, a new access token can be generated, by making a call to the refresh token endpoint (POST `/v1/auth/refresh-tokens`) and sending along a valid refresh token in the request body. This call returns a new access token and a new refresh token.
+After the access token expires, a new access token can be generated, by making a call to the refresh token endpoint (POST `/v1/auth/refresh-token`) and sending along a valid refresh token in the request body. This call returns a new access token and a new refresh token.
 
 [//]: # (## Authorization)
 
